@@ -25,10 +25,19 @@ class Order(models.Model):
         verbose_name="زمان ثبت سفارش"
     )
 
+    updated = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="زمان تغییر سفارش"
+    )
+
     sent = models.BooleanField(
         default=False,
         verbose_name='وضعیت ارسال سفارش'
     )
+
+    @property
+    def delivery_time_by_delay(self):
+        return self.delay + self.delivery_time
 
 
 class Trip(models.Model):
@@ -42,7 +51,7 @@ class Trip(models.Model):
         ("DELIVERED", "سفارش به مقصد رسیده"),
         ("PICKED", "دریافت سفارش"),
         ("AT_VENDOR", "در فروشگاه"),
-        ("ASSIGNED", "انتخاب شده")
+        ("ASSIGNED", "پیک در راه فروشگاه")
     )
 
     status = models.CharField(
@@ -70,7 +79,9 @@ class DelayReport(models.Model):
         Agent,
         related_name='agent',
         verbose_name='پشتیبان بررسی کننده این گزارش',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
     )
 
     DELAY_STATUS = (
