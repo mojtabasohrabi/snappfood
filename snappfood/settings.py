@@ -40,7 +40,9 @@ INSTALLED_APPS = [
 
     'vendors',
     'orders',
-    'agents'
+    'agents',
+
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
