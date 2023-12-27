@@ -1,3 +1,13 @@
 from django.db import models
 
-# Create your models here.
+
+class Agent(models.Model):
+    name = models.CharField(
+        max_length=200,
+        verbose_name='نام پشتیبان'
+    )
+
+    created = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="زمان شروع همکاری"
+    )
