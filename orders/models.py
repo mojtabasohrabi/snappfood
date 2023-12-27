@@ -39,6 +39,9 @@ class Order(models.Model):
     def delivery_time_by_delay(self):
         return self.delay + self.delivery_time
 
+    def __str__(self):
+        return f" سفارش شماره{self.id}:  از فروشگاه:{self.vendor.name}"
+
 
 class Trip(models.Model):
     order = models.OneToOneField(
