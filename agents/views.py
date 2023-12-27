@@ -33,7 +33,7 @@ class CheckDelayRreportApiView(APIView):
 
     def assign_first_open_delay_report(self, agent_id):
         agent = self.get_agent(agent_id)
-        delay_report = DelayReport.objects.filter(status='WAIT_FOR_AGENT')
+        delay_report = DelayReport.objects.filter(status='WAIT_FOR_AGENT').first()
         if delay_report:
             delay_report.agent = agent
             delay_report.status = 'IN_PROGRESS'
@@ -54,7 +54,7 @@ class CheckDelayRreportApiView(APIView):
 
             delay_report_assigned = self.assign_first_open_delay_report(agent_id)
             if delay_report_assigned:
-                return Response({'error': delay_report_assigned}, status.HTTP_200_OK)
+                return Response({'delay_report_assigned': delay_report_assigned}, status.HTTP_200_OK)
             else:
                 return Response({'error': 'there isn`t open delay report'}, status.HTTP_200_OK)
         else:

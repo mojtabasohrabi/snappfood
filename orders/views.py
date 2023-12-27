@@ -36,7 +36,7 @@ class OrderDelayRreportApiView(APIView):
 
     @staticmethod
     def get_order(order_id):
-        return Order.objects.filter(id=order_id).values('delivery_time', 'created', 'delay').first()
+        return Order.objects.filter(id=order_id).values('delivery_time', 'updated', 'delay').first()
 
     @staticmethod
     def update_order_delivery_time(order_id, new_delay_time):
@@ -47,7 +47,7 @@ class OrderDelayRreportApiView(APIView):
 
     @staticmethod
     def existence_open_delay_report(order_id):
-        delay_report = DelayReport.objects.filter(pk=order_id, status__in=['WAIT_FOR_AGENT', 'IN_PROGRESS'])
+        delay_report = DelayReport.objects.filter(order__id=order_id, status__in=['WAIT_FOR_AGENT', 'IN_PROGRESS'])
         if delay_report:
             return True
         return False
@@ -69,9 +69,9 @@ class OrderDelayRreportApiView(APIView):
         if order:
 
             delivery_time_by_delay = order.get('delivery_time') + order.get('delay')
-            created = order.get('updated')
+            updated = order.get('updated')
 
-            if datetime.timedelta(minutes=delivery_time_by_delay) + created < timezone.now():
+            if datetime.timedelta(minutes=delivery_time_by_delay) + updated < timezone.now():
                 order_trip = Trip.objects.filter(order_id=order_id).values('status').first()
 
                 if order_trip and order_trip.get('status') in ['ASSIGNED', 'VENODR_AT', 'PICKED']:
@@ -79,8 +79,9 @@ class OrderDelayRreportApiView(APIView):
                     self.update_order_delivery_time(order_id, new_delay_time)
                     return Response({'new_delivery_time': new_delay_time}, status.HTTP_200_OK)
 
-                elif not order_trip or order_trip.get('status') == 'DELIVERED' and not existence_open_delay_report(order_id):
-                    self.create_delay_report(order_id)
+                elif not order_trip or order_trip.get('status') == 'DELIVERED':
+                    if not self.existence_open_delay_report(order_id):
+                        self.create_delay_report(order_id)
                     return Response({'message': 'your report is in progress'}, status.HTTP_200_OK)
                 else:
                     return Response({'error': 'There was a problem!'}, status.HTTP_400_BAD_REQUEST)
