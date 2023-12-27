@@ -12,3 +12,6 @@ class Vendor(models.Model):
         db_index=True,
         verbose_name="زمان شروع همکاری"
     )
+
+    def __str__(self):
+        return self.name
