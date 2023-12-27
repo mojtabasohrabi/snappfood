@@ -37,9 +37,8 @@ class VendorsSumWeekliDelayApiView(APIView):
 
     def get(self, request: Request):
         seven_day_before = self.calculate_week()
-        present_employees_all = (Order.objects.filter(created__gte=seven_day_before)
+        sum_delay_for_each_vendor = (Order.objects.filter(created__gte=seven_day_before)
                                  .values('vendor').distinct()
                                  .annotate(sum_delays_in_this_week_by_minutus=Sum('delay')))
 
-        print(present_employees_all)
-        return Response({'data': present_employees_all}, status.HTTP_200_OK)
+        return Response({'data': sum_delay_for_each_vendor}, status.HTTP_200_OK)
