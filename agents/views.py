@@ -2,27 +2,21 @@ from rest_framework.request import Request
 from .models import Agent
 from orders.models import DelayReport
 from .serializers import AgentSerializer, DelayReportSerializer
-from rest_framework import generics, mixins
+from rest_framework import generics
 from rest_framework.exceptions import ValidationError, NotFound
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
 
-class AgentsCreateMixinApiView(mixins.CreateModelMixin, generics.GenericAPIView):
+class AgentsCreateMixinApiView(generics.CreateAPIView):
     queryset = Agent.objects.all()
     serializer_class = AgentSerializer
 
-    def post(self, request: Request):
-        return self.create(request)
 
-
-class AgentsListMixinApiView(mixins.ListModelMixin, generics.GenericAPIView):
+class AgentsListMixinApiView(generics.ListAPIView):
     queryset = Agent.objects.all()
     serializer_class = AgentSerializer
-
-    def get(self, request: Request):
-        return self.list(request)
 
 
 class CheckDelayRreportApiView(APIView):
