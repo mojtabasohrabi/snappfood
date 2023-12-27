@@ -11,3 +11,6 @@ class Agent(models.Model):
         auto_now_add=True,
         verbose_name="زمان شروع همکاری"
     )
+
+    def __str__(self):
+        return self.name
