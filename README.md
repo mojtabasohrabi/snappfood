@@ -71,7 +71,7 @@ Docker-compose up --build
 6. to assign a report to agents use this api: `localhost:8000/agent/check-delay-report/`
 
 
-7. to get report of sum delays of each vendor in this week use this api: `localhost:8000/vendor/sum-weekli-delay/`
+7. to get report of sum delays of each vendor in this week use this api: `localhost:8000/vendor/sum-weekly-delay/`
 
 
 ## Author

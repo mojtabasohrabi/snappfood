@@ -1,9 +1,9 @@
 import random
 
-from .models import Order, Trip,DelayReport
+from .models import Order, Trip, DelayReport
 from .serializers import OrderSerializer, TripSerializer, DelayReportSerializer
-from rest_framework import viewsets, generics, mixins
-from rest_framework.exceptions import ValidationError, NotFound
+from rest_framework import viewsets, generics
+from rest_framework.exceptions import ValidationError
 import datetime
 from django.utils import timezone
 from rest_framework.views import APIView
@@ -32,7 +32,7 @@ class DelayReportViewSetApiView(viewsets.ModelViewSet):
     serializer_class = DelayReportSerializer
 
 
-class OrderDelayRreportApiView(APIView):
+class OrderDelayReportApiView(APIView):
 
     @staticmethod
     def get_order(order_id):
@@ -65,16 +65,15 @@ class OrderDelayRreportApiView(APIView):
         else:
             raise ValidationError("There was a problem!")
 
-
         if order:
 
             delivery_time_by_delay = order.get('delivery_time') + order.get('delay')
             updated = order.get('updated')
 
             if datetime.timedelta(minutes=delivery_time_by_delay) + updated < timezone.now():
-                order_trip = Trip.objects.filter(order_id=order_id).values('status').first()
+                order_trip = Trip.objects.filter(order__id=order_id).values('status').first()
 
-                if order_trip and order_trip.get('status') in ['ASSIGNED', 'VENODR_AT', 'PICKED']:
+                if order_trip and order_trip.get('status') in ['ASSIGNED', 'AT_VENDOR', 'PICKED']:
                     new_delay_time = order.get('delay') + random.randint(10, 30)
                     self.update_order_delivery_time(order_id, new_delay_time)
                     return Response({'new_delivery_time': new_delay_time}, status.HTTP_200_OK)
@@ -89,4 +88,3 @@ class OrderDelayRreportApiView(APIView):
                 return Response({'error': 'order in progress!'}, status.HTTP_400_BAD_REQUEST)
         else:
             return Response({'error': 'order not found!'}, status.HTTP_404_NOT_FOUND)
-

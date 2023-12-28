@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path
 
 from . import views
 from rest_framework.routers import DefaultRouter
@@ -10,7 +10,7 @@ router.register('delay-report-list', views.DelayReportViewSetApiView)
 
 urlpatterns = [
     path('ready/', views.TripsCreateGenericApiView.as_view()),
-    path('delay-report/', views.OrderDelayRreportApiView.as_view()),
+    path('delay-report/', views.OrderDelayReportApiView.as_view()),
 ]
 
 urlpatterns += router.urls

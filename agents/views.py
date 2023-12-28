@@ -1,9 +1,8 @@
 from rest_framework.request import Request
 from .models import Agent
 from orders.models import DelayReport
-from .serializers import AgentSerializer, DelayReportSerializer
+from .serializers import AgentSerializer
 from rest_framework import generics
-from rest_framework.exceptions import ValidationError, NotFound
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -19,7 +18,7 @@ class AgentsListMixinApiView(generics.ListAPIView):
     serializer_class = AgentSerializer
 
 
-class CheckDelayRreportApiView(APIView):
+class CheckDelayReportApiView(APIView):
     @staticmethod
     def has_open_delay_report(agent_id):
         delay_report_by_this_agent = DelayReport.objects.filter(agent_id=agent_id, status='IN_PROGRESS')
