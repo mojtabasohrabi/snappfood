@@ -45,6 +45,10 @@ git clone https://github.com/mojtabasohrabi/snappfood.git
 Docker-compose up --build
 ```
 
+> [!WARNING]
+> if your OS is Windows, you should change files line separator to LF to work docker correctly.  
+
+
 4. now project ups in `localhost:8000`
 
 
