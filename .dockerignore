@@ -1,0 +1,8 @@
+.gitlab-ci.yml
+.env
+.env.*
+build/
+venv/
+.venv/
+db.sqlite3
+.idea/
